@@ -2,10 +2,10 @@
   "name": "discord-downtime-notifier",
   "version": "1.0.0",
   "description": "A discord bot that notifies a server when a specific bot is offline.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,8 @@
   "homepage": "https://github.com/moonstar-x/dicord-downtime-notifier#readme",
   "dependencies": {
     "discord.js": "^11.4.2"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
