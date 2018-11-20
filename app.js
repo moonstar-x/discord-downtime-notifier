@@ -5,8 +5,8 @@ const config = require('./settings.json');
 let listenBot, messageChannel;
 
 client.on('ready', () => {
-  listenBot = client.guilds.get(config.server_id).members.get(config.listen_bot_id);
-  messageChannel = client.channels.get(config.notify_channel_id);
+  listenBot = client.guilds.get(process.env.SERVER_ID || config.server_id).members.get(process.env.BOT_ID || config.listen_bot_id);
+  messageChannel = client.channels.get(process.env.CHANNEL_ID || config.notify_channel_id);
 
   if (!listenBot.user.bot) {
     throw new Error('Specified user is not a bot. Make sure the "listen_bot_id" under the settings.json file has the correct bot id.');
@@ -39,4 +39,4 @@ client.on('presenceUpdate', (oldMember, newMember) => {
   }
 });
 
-client.login(config.discord_token);
+client.login(process.env.DISCORD_TOKEN || config.discord_token);

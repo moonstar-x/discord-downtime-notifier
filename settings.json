@@ -1,6 +1,6 @@
 {
-  "discord_token": "process.env.DISCORD_TOKEN",
-  "server_id": "process.env.SERVER_ID",
-  "listen_bot_id": "process.env.BOT_ID",
-  "notify_channel_id": "process.env.CHANNEL_ID"
+  "discord_token": "YOUR_DISCORD_TOKEN",
+  "server_id": "YOUR_SERVER_ID",
+  "listen_bot_id": "YOUR_BOT_ID",
+  "notify_channel_id": "YOUR_CHANNEL_ID"
 }
