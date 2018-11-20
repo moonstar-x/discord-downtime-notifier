@@ -5,4 +5,5 @@ This is a small bot that notifies a server through a message when another bot go
 * This bot should work for multiple servers and multiple bots inside each server.
 * If possible, server ID shouldn't be required by the user.
 * It would also be interesting if the bot could also mention for how long has the specified bot been down.
+* Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
 * I also need to write a little guide on how to use this bot on this readme.
