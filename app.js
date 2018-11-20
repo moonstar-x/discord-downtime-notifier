@@ -25,7 +25,7 @@ client.on('ready', () => {
 });
 
 client.on('presenceUpdate', (oldMember, newMember) => {
-  if (oldMember.id === config.listen_bot_id) {
+  if (oldMember.id === (process.env.BOT_ID || config.listen_bot_id)) {
     let oldStatus = oldMember.presence.status;
     let newStatus = newMember.presence.status;
     if (oldStatus === 'online' && newStatus === 'offline') {
