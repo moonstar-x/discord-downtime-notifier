@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+
+// Create settings.json file to avoid problems when deploying to Heroku.
+fs.closeSync(fs.openSync('./settings.json', 'a'));
 const config = require('./settings.json');
 
 let listenBot, messageChannel;
