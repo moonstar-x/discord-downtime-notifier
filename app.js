@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const fs = requrie('fs');
+const fs = require('fs');
 const client = new Discord.Client();
 
 // Create settings.json file to avoid problems when deploying to Heroku.

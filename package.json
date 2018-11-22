@@ -12,7 +12,7 @@
     "url": "git+https://github.com/moonstar-x/dicord-downtime-notifier.git"
   },
   "author": "moonstar-x",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/moonstar-x/dicord-downtime-notifier/issues"
   },
