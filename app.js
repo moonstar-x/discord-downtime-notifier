@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
-const fs = require('fs');
 const client = new Discord.Client();
+let config;
 
-// Create settings.json file to avoid problems when deploying to Heroku.
-fs.closeSync(fs.openSync('./settings.json', 'a'));
-const config = require('./settings.json');
+if (!process.env.DISCORD_TOKEN) {
+  config = require('./settings.json');
+}
 
 let listenBot, messageChannel;
 let timeSinceOffline = undefined;
