@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/moonstar-x/dicord-downtime-notifier#readme",
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "fs": "0.0.1-security"
   },
   "engines": {
     "node": "10.x"
