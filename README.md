@@ -6,3 +6,9 @@ This is a small bot that notifies a server through a message when another bot go
 * If possible, server ID shouldn't be required by the user.
 * Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
 * I also need to write a little guide on how to use this bot on this readme.
+
+## Installation:
+
+## Usage:
+
+

@@ -62,6 +62,5 @@ function displayTime(millis) {
       result.push(timeArr[i], timeArr[i + 1]);
     }
   }
-  return result
-    .join(' ');
+  return result.join(' ');
 }
