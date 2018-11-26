@@ -1,0 +1,5 @@
+{
+  "name": "Discord Downtime Notifier",
+  "description": "A small Discord bot that sends a message when a specified bot goes offline.",
+  "repository": "https://github.com/moonstar-x/discord-downtime-notifier"
+}

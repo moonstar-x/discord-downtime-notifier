@@ -5,10 +5,47 @@ This is a small bot that notifies a server through a message when another bot go
 * This bot should work for multiple servers and multiple bots inside each server.
 * If possible, server ID shouldn't be required by the user.
 * Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
-* I also need to write a little guide on how to use this bot on this readme.
 
 ## Installation:
+You can self-host this bot or deploy it on a service like [Heroku](https://www.heroku.com/) for example.
+
+### Self-Hosting
+In order to self-host this bot, you'll need to clone this repository.
+
+    git clone https://github.com/moonstar-x/discord-downtime-notifier.git
+
+Then, rename the file *settings.json.example* to *settings.json* and edit the values according to your server (server ID, channel ID, bot ID and bot token).
+
+Install the dependencies:
+
+    npm install
+
+You can now run your bot:
+
+    npm start
+
+
+### Deploying to Heroku.
+To deploy to Heroku, you can click on the image below and login to your account.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/moonstar-x/discord-downtime-notifier)
+
+You'll then need to add the config vars for your bot, head over to your app's *Dashboard*, click on *Settings* and *Reveal Config Vars*. You'll need to add the following vars with their respective values.
+
+| CONFIG VAR    | VALUE                        |
+|---------------|------------------------------|
+| BOT_ID        | YOUR BOT ID HERE.            |
+| CHANNEL_ID    | YOUR CHANNEL ID HERE.        |
+| SERVER ID     | YOUR SERVER ID HERE.         |
+| DISCORD_TOKEN | YOUR DISCORD BOT TOKEN HERE. |
+
+*Copy the config var exactly as it is and only change your values.*
+
+You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
 
 ## Usage:
+On its current state, the bot does not have an *usage*, you simply turn it on and forget about it.
 
+## Author:
+This bot was made by [moonstar-x](https://github.com/moonstar-x).
 
