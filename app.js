@@ -6,26 +6,20 @@ if (!process.env.DISCORD_TOKEN) {
   config = require('./settings.json');
 }
 
-let listenBot, messageChannel;
+let listenBot, listenBotName, messageChannel;
 let timeSinceOffline = undefined;
 
 client.on('ready', () => {
   listenBot = client.guilds.get(process.env.SERVER_ID || config.server_id).members.get(process.env.BOT_ID || config.listen_bot_id);
   messageChannel = client.channels.get(process.env.CHANNEL_ID || config.notify_channel_id);
+  updatePresence(listenBot);
 
   if (!listenBot.user.bot) {
     throw new Error('Specified user is not a bot. Make sure the "listen_bot_id" under the settings.json file has the correct bot id.');
   }
 
-  client.user.setPresence({
-    game: {
-      name: `${listenBot.nickname}`,
-      type: 'LISTENING'
-    }
-  });
-
   console.log('Service started.');
-  console.log(`Listening to bot: ${listenBot.nickname}`);
+  console.log(`Listening to bot: ${listenBotName}`);
   console.log(`Will send messages to the ${messageChannel.name} channel.`);
 });
 
@@ -33,6 +27,7 @@ client.on('presenceUpdate', (oldMember, newMember) => {
   if (oldMember.id === (process.env.BOT_ID || config.listen_bot_id)) {
     let oldStatus = oldMember.presence.status;
     let newStatus = newMember.presence.status;
+
     if (oldStatus === 'online' && newStatus === 'offline') {
       timeSinceOffline = Date.now();
       messageChannel.send(`The bot ${listenBot} has gone offline.`);
@@ -46,7 +41,14 @@ client.on('presenceUpdate', (oldMember, newMember) => {
         messageChannel.send(`The bot ${listenBot} is now online.`);
       } 
     }
-    console.log(`Status changed for ${listenBot.nickname} from ${oldStatus} to ${newStatus}!`);
+    console.log(`Status changed for ${listenBotName} from ${oldStatus} to ${newStatus}!`);
+  }
+});
+
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+  if (oldMember.id === (process.env.BOT_ID || config.listen_bot_id)) {
+    updatePresence(newMember);
+    console.log(`Bot name has changed from ${oldMember.nickname || oldMember.user.username} to ${newMember.nickname || newMember.user.username}!`);
   }
 });
 
@@ -67,4 +69,14 @@ function displayTime(millis) {
     }
   }
   return result.join(' ');
+}
+
+function updatePresence(member) {
+  listenBotName = member.nickname || member.user.username;
+  client.user.setPresence({
+    game: {
+      name: `${listenBotName}`,
+      type: 'LISTENING'
+    }
+  });
 }

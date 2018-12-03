@@ -1,13 +1,13 @@
 # Discord Downtime Notifier Bot
 This is a small bot that notifies a server through a message when another bot goes offline. The main use is to let users know when a music bot goes offline and becomes unusable. It also lets users know once said bot goes back online. This is useful mostly for server owners with self-hosted bots and need a way of getting notified when they bots go offline. For better results, this bot should be hosted on a service like [Heroku](https://www.heroku.com/).
 
-## To Do:
-* This bot should work for multiple servers and multiple bots inside each server.
-* If possible, server ID shouldn't be required by the user.
-* Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
+## Requirements
+You can self-host this bot or deploy it on a service like [Heroku](https://www.heroku.com/) for example. If you do decide to self-host, you'll need to install the following:
+
+* [git](https://git-scm.com/)
+* [node.js](https://nodejs.org/en/)
 
 ## Installation:
-You can self-host this bot or deploy it on a service like [Heroku](https://www.heroku.com/) for example.
 
 ### Self-Hosting
 In order to self-host this bot, you'll need to clone this repository.
@@ -15,6 +15,13 @@ In order to self-host this bot, you'll need to clone this repository.
     git clone https://github.com/moonstar-x/discord-downtime-notifier.git
 
 Then, rename the file *settings.json.example* to *settings.json* and edit the values according to your server (server ID, channel ID, bot ID and bot token).
+
+    {
+      "discord_token": "YOUR_DISCORD_TOKEN",
+      "server_id": "YOUR_SERVER_ID",
+      "listen_bot_id": "YOUR_BOT_ID",
+      "notify_channel_id": "YOUR_CHANNEL_ID"
+    }
 
 Install the dependencies:
 
@@ -45,6 +52,11 @@ You can now go back to your app's *Overview*, make sure you disable the *web* dy
 
 ## Usage:
 On its current state, the bot does not have an *usage*, you simply turn it on and forget about it.
+
+## To Do:
+* This bot should work for multiple servers and multiple bots inside each server.
+* If possible, server ID shouldn't be required by the user.
+* Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
 
 ## Author:
 This bot was made by [moonstar-x](https://github.com/moonstar-x).
