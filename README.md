@@ -51,12 +51,7 @@ You'll then need to add the config vars for your bot, head over to your app's *D
 You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
 
 ## Usage:
-On its current state, the bot does not have an *usage*, you simply turn it on and forget about it.
-
-## To Do:
-* This bot should work for multiple servers and multiple bots inside each server.
-* If possible, server ID shouldn't be required by the user.
-* Something I could also add would be that the message this bot sends may also be directed to an user (ideally the bot's manager) or maybe even to a role.
+On its current state, the bot does not have an *usage*, you simply turn it on and forget about it
 
 ## Author:
 This bot was made by [moonstar-x](https://github.com/moonstar-x).
