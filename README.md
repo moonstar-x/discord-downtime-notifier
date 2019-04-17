@@ -1,15 +1,18 @@
 # Discord Downtime Notifier Bot
+
 This is a small bot that notifies a server through a message when another bot goes offline. The main use is to let users know when a music bot goes offline and becomes unusable. It also lets users know once said bot goes back online. This is useful mostly for server owners with self-hosted bots and need a way of getting notified when they bots go offline. For better results, this bot should be hosted on a service like [Heroku](https://www.heroku.com/).
 
 ## Requirements
+
 You can self-host this bot or deploy it on a service like [Heroku](https://www.heroku.com/) for example. If you do decide to self-host, you'll need to install the following:
 
 * [git](https://git-scm.com/)
 * [node.js](https://nodejs.org/en/)
 
-## Installation:
+## Installation
 
 ### Self-Hosting
+
 In order to self-host this bot, you'll need to clone this repository.
 
     git clone https://github.com/moonstar-x/discord-downtime-notifier.git
@@ -31,8 +34,8 @@ You can now run your bot:
 
     npm start
 
+### Deploying to Heroku
 
-### Deploying to Heroku.
 To deploy to Heroku, you can click on the image below and login to your account.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/moonstar-x/discord-downtime-notifier)
@@ -50,9 +53,10 @@ You'll then need to add the config vars for your bot, head over to your app's *D
 
 You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
 
-## Usage:
+## Usage
+
 On its current state, the bot does not have an *usage*, you simply turn it on and forget about it
 
-## Author:
-This bot was made by [moonstar-x](https://github.com/moonstar-x).
+## Author
 
+This bot was made by [moonstar-x](https://github.com/moonstar-x).
