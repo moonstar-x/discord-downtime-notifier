@@ -1,3 +1,12 @@
+# Node Modules
 node_modules/
+
+# Dev Bot Config
 config/settings.json
 .env
+
+# Realm
+data/guild_data.realm*
+
+# Old Files
+*.old
