@@ -10,7 +10,15 @@ const client = new Client();
 const logger = new Logger();
 const realm = new Realm({ schema: [model] });
 
-const config = !process.env.DISCORD_TOKEN ? require('../config/settings.json') : undefined;
+let config = undefined;
+if (process.env.DISCORD_TOKEN) {
+  config = {
+    discord_token: process.env.DISCORD_TOKEN,
+    prefix: process.env.PREFIX
+  }
+} else {
+  config = require('../config/settings.json');
+}
 
 client.commands = new Collection();
 
@@ -212,4 +220,4 @@ client.on('invalidated', () => {
   process.exit(1);
 });
 
-client.login(process.env.DISCORD_TOKEN || config.discord_token);
+client.login(config.discord_token);
