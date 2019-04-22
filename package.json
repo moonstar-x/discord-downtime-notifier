@@ -20,6 +20,7 @@
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
     "fs": "0.0.1-security",
+    "http": "0.0.0",
     "logger": "github:moonstar-x/logger",
     "realm": "^2.26.1"
   },

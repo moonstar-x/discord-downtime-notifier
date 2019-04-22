@@ -3,6 +3,7 @@ const { Logger } = require('logger');
 const fs = require('fs');
 const { model } = require('../data/model');
 const Realm = require('realm');
+const http = require('http');
 
 Realm.defaultPath = './data/guild_data.realm';
 
@@ -82,10 +83,28 @@ function initializeRealm() {
   });
 }
 
+// Used to keep the Heroku dyno alive.
+function keepAlive() {
+  setInterval( () => {
+    const info = {
+      host: 'discord-downtime-notifier.herokuapp.com',
+      port: 80,
+      path: '/'
+    }
+    http.get(info, _ => {
+      logger.info(`Heroku keep alive...`);
+    }).on('error', err => {
+      logger.error(err)
+    });
+  }, 20 * 60 * 1000); // Load every 20 minutes.
+}
+
 client.on('ready', () => {
   logger.info('Connected to Discord! - Ready.');
   updatePresence(client.guilds.size);
   initializeRealm();
+  //if (process.env.DISCORD_TOKEN) keepAlive();
+  keepAlive();
 });
 
 client.on('message', async message => {
