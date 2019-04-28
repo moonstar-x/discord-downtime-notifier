@@ -103,8 +103,6 @@ client.on('ready', () => {
   logger.info('Connected to Discord! - Ready.');
   updatePresence(client.guilds.size);
   initializeRealm();
-  //if (process.env.DISCORD_TOKEN) keepAlive();
-  keepAlive();
 });
 
 client.on('message', async message => {
@@ -240,3 +238,4 @@ client.on('invalidated', () => {
 });
 
 client.login(config.discord_token);
+if (process.env.DISCORD_TOKEN) keepAlive();
