@@ -237,5 +237,9 @@ client.on('invalidated', () => {
   process.exit(1);
 });
 
+client.on('debug', info => {
+  logger.debug(info);
+});
+
 client.login(config.discord_token);
 if (process.env.DISCORD_TOKEN) keepAlive();
