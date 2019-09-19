@@ -35,6 +35,17 @@ const handleGuildUnavailable = (guild) => {
   logger.warn(`Guild ${guild.name} is currently unavailable!`);
 };
 
+const handleMemberDelete = (member, realm) => {
+  const realmGuild = realm.getGuild(member.guild.id);
+  const storedBotIndex = realmGuild.trackedBots.findIndex(bot => bot.id === member.id);
+
+  if (!storedBotIndex) {
+    return;
+  }
+
+  realm.removeBot(storedBotIndex, realmGuild, member.guild, member);
+};
+
 const handleMessage = (message, realm) => {
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return;
@@ -94,6 +105,7 @@ module.exports = {
   handleDisconnect,
   handleGuildCreate,
   handleGuildDelete,
+  handleMemberDelete,
   handleGuildUnavailable,
   handleMessage,
   handlePresenceUpdate,

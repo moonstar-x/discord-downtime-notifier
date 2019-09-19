@@ -22,6 +22,7 @@ client.on(appEvents.error, (error) => appHandlers.handleError(error));
 client.on(appEvents.guildCreate, (guild) => appHandlers.handleGuildCreate(guild, realm));
 client.on(appEvents.guildDelete, (guild) => appHandlers.handleGuildDelete(guild, realm));
 client.on(appEvents.guildUnavailable, (guild) => appHandlers.handleGuildUnavailable(guild));
+client.on(appEvents.guildMemberRemove, (member) => appHandlers.handleMemberDelete(member, realm));
 client.on(appEvents.message, (message) => appHandlers.handleMessage(message, realm));
 client.on(appEvents.presenceUpdate, (oldMember, newMember) => appHandlers.handlePresenceUpdate(oldMember, newMember, realm));
 client.on(appEvents.ready, () => appHandlers.handleReady(realm));
