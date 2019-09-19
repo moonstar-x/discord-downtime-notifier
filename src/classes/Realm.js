@@ -48,11 +48,10 @@ class RealmAdapter {
     return receivedEntries.length > 0 ? receivedEntries[0] : null;
   }
 
-  setLastOnline(botMember) {
+  setLastOnline(botMember, realmEntry, timestamp) {
     this.realm.write(() => {
-      const [realmEntry] = this.realm.objects('Guilds').filtered(`id = "${botMember.guild.id}"`);
       const realmBot = realmEntry.trackedBots.find(bot => bot.id === botMember.id);
-      realmBot.lastOnline = Date.now();
+      realmBot.lastOnline = timestamp;
     });
   }
 

@@ -64,7 +64,7 @@ const handlePresenceUpdate = (oldMember, newMember, realm) => {
   const realmGuild = realm.getGuild(newMember.guild.id);
   if (!realmGuild) return;
 
-  const updatedBotID = realmGuild.listening.find( entry => entry == newMember.id);
+  const updatedBotID = realmGuild.trackedBots.find(entry => entry.id === newMember.id);
   if (!updatedBotID) return;
 
   broadcastBotStatusChange(newMember, status, realmGuild, realm);

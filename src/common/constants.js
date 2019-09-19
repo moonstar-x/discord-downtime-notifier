@@ -74,6 +74,11 @@ const MESSAGE_EMBED = {
   issuesURL: 'https://github.com/moonstar-x/discord-downtime-notifier/issues'
 };
 
+const MESSAGE_SEND_ERRORS = {
+  unknown: 'DiscordAPIError: Unknown Channel',
+  permissions: 'DiscordAPIError: Missing Permissions'
+};
+
 module.exports = {
   MAX_EMBED_FIELD_SIZE,
   PERMISSIONS,
@@ -81,5 +86,6 @@ module.exports = {
   ACTIVITY_TYPE,
   CHANNEL_TYPE,
   NUMBER_EMOJI_UNICODE,
-  MESSAGE_EMBED
+  MESSAGE_EMBED,
+  MESSAGE_SEND_ERRORS
 };
