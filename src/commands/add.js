@@ -1,11 +1,11 @@
 const { PERMISSIONS } = require('../common/constants');
 
-const getEarlyErrorMessage = (realmEntry, memberMention, prefix) => {
-  if (!realmEntry) {
+const getEarlyErrorMessage = (realmGuild, memberMention, prefix) => {
+  if (!realmGuild) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
 
-  if (!realmEntry.channel) {
+  if (!realmGuild.channel) {
     return `before adding any bots, you need to define in which channel I should send the notifications. Please define the broadcasting text channel with **${prefix}channel** and mention the text channel you want to set.`;
   }
 
@@ -20,7 +20,7 @@ const parseBotMention = (memberStore, memberMention) => {
   return memberStore.find(member => member.id === mentionedID);
 };
 
-const validateNewBot = (newBot, realmEntry) => {
+const validateNewBot = (newBot, realmGuild) => {
   const result = {
     error: false,
     message: null
@@ -34,7 +34,7 @@ const validateNewBot = (newBot, realmEntry) => {
     result.message = `the user ${newBot} is not a bot. You can only add bots to this list.`;
   }
 
-  const storedBotID = realmEntry.trackedBots.find(entry => entry.id === newBot.id);
+  const storedBotID = realmGuild.trackedBots.find(entry => entry.id === newBot.id);
   if (storedBotID) {
     result.error = true;
     result.message = `the bot ${newBot} is already in the list.`;
@@ -51,23 +51,23 @@ module.exports = {
   execute(message, options) {
     const { realm, prefix } = options;
     const [memberMention] = options.args;
-    const realmEntry = realm.getGuild(message.guild.id);
+    const realmGuild = realm.getGuild(message.guild.id);
 
-    const earlyErrorMessage = getEarlyErrorMessage(realmEntry, memberMention, prefix);
+    const earlyErrorMessage = getEarlyErrorMessage(realmGuild, memberMention, prefix);
     if (earlyErrorMessage) {
       message.reply(earlyErrorMessage);
       return;
     }
 
     const newBot = parseBotMention(message.guild.members, memberMention);
-    const newBotValidation = validateNewBot(newBot, realmEntry);
+    const newBotValidation = validateNewBot(newBot, realmGuild);
 
     if (newBotValidation.error) {
       message.reply(newBotValidation.message);
       return;
     }
     
-    realm.addNewBot(newBot, realmEntry, message.guild);
+    realm.addNewBot(newBot, realmGuild, message.guild);
     message.reply(`successfully added ${newBot} to the list.`);
   }
 }

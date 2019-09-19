@@ -36,9 +36,9 @@ class RealmAdapter {
 
   deleteGuild(guild) {
     this.realm.write(() => {
-      const [realmEntry] = this.realm.objects('Guilds').filtered(`id = "${guild.id}"`);
-      this.realm.delete(realmEntry.trackedBots);
-      this.realm.delete(realmEntry);
+      const [realmGuild] = this.realm.objects('Guilds').filtered(`id = "${guild.id}"`);
+      this.realm.delete(realmGuild.trackedBots);
+      this.realm.delete(realmGuild);
       logger.info(`(REALM): Deleted entry for ${guild.name}.`);
     });
   }
@@ -48,9 +48,9 @@ class RealmAdapter {
     return receivedEntries.length > 0 ? receivedEntries[0] : null;
   }
 
-  setLastOnline(botMember, realmEntry, timestamp) {
+  setLastOnline(botMember, realmGuild, timestamp) {
     this.realm.write(() => {
-      const realmBot = realmEntry.trackedBots.find(bot => bot.id === botMember.id);
+      const realmBot = realmGuild.trackedBots.find(bot => bot.id === botMember.id);
       realmBot.lastOnline = timestamp;
     });
   }
@@ -65,9 +65,9 @@ class RealmAdapter {
     });
   }
 
-  addNewBot(newBot, realmEntry, guild) {
+  addNewBot(newBot, realmGuild, guild) {
     this.realm.write(() => {
-      realmEntry.trackedBots.push({
+      realmGuild.trackedBots.push({
         id: newBot.id,
         lastOnline: null
       });
@@ -75,13 +75,13 @@ class RealmAdapter {
     });
   }
 
-  removeExtraneousEntries(entries, realmEntry, guild) {
+  removeExtraneousEntries(entries, realmGuild, guild) {
     this.realm.write(() => {
-      const trackedIDs = realmEntry.trackedBots.map(bot => bot.id);
+      const trackedIDs = realmGuild.trackedBots.map(bot => bot.id);
       for (const extraneousID of entries) {
         const index = trackedIDs.indexOf(extraneousID);
         if (index > -1) {
-          const removedFromArray = realmEntry.trackedBots.splice(index, 1);
+          const removedFromArray = realmGuild.trackedBots.splice(index, 1);
           this.realm.delete(removedFromArray);
           logger.warn(`(REALM): Removed extraneous bot entry in ${guild.name} with id ${extraneousID}.`);
         }
@@ -89,9 +89,9 @@ class RealmAdapter {
     });
   }
 
-  removeBot(indexToRemove, realmEntry, guild, botToRemove) {
+  removeBot(indexToRemove, realmGuild, guild, botToRemove) {
     this.realm.write(() => {
-      const removedFromArray = realmEntry.trackedBots.splice(indexToRemove, 1);
+      const removedFromArray = realmGuild.trackedBots.splice(indexToRemove, 1);
       this.realm.delete(removedFromArray);
       logger.info(`(REALM): Written guild ${guild.name} list deletion of ${botToRemove.displayName}.`);
     }); 

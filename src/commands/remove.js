@@ -1,7 +1,7 @@
 const { PERMISSIONS } = require('../common/constants');
 
-const getEarlyErrorMessage = (realmEntry, memberMention, prefix) => {
-  if (!realmEntry) {
+const getEarlyErrorMessage = (realmGuild, memberMention, prefix) => {
+  if (!realmGuild) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
   if (!memberMention) {
@@ -15,14 +15,14 @@ const parseBotMention = (memberStore, memberMention) => {
   return memberStore.find(member => member.id === mentionedID);
 };
 
-const validateBotBeforeRemoving = (botToRemove, realmEntry) => {
+const validateBotBeforeRemoving = (botToRemove, realmGuild) => {
   const result = {
     error: false,
     message: null,
     indexToRemove: -1
   };
 
-  const indexToRemove = realmEntry.trackedBots.findIndex(entry => entry.id === botToRemove.id);
+  const indexToRemove = realmGuild.trackedBots.findIndex(entry => entry.id === botToRemove.id);
 
   if (!botToRemove) {
     result.error = true;
@@ -44,16 +44,16 @@ module.exports = {
   execute(message, options) {
     const { realm, prefix } = options;
     const [memberMention] = options.args;
-    const realmEntry = realm.getGuild(message.guild.id);
+    const realmGuild = realm.getGuild(message.guild.id);
 
-    const earlyErrorMessage = getEarlyErrorMessage(realmEntry, memberMention, prefix);
+    const earlyErrorMessage = getEarlyErrorMessage(realmGuild, memberMention, prefix);
     if (earlyErrorMessage) {
       message.reply(earlyErrorMessage);
       return;
     }
 
     const botToRemove = parseBotMention(message.guild.members, memberMention);
-    const botToRemoveValidation = validateBotBeforeRemoving(botToRemove, realmEntry);
+    const botToRemoveValidation = validateBotBeforeRemoving(botToRemove, realmGuild);
 
     if (botToRemoveValidation.error) {
       message.reply(botToRemoveValidation.message);
@@ -61,7 +61,7 @@ module.exports = {
     }
 
     const { indexToRemove } = botToRemoveValidation;
-    realm.removeBot(indexToRemove, realmEntry, message.guild, botToRemove);
+    realm.removeBot(indexToRemove, realmGuild, message.guild, botToRemove);
     message.reply(`successfully removed ${botToRemove} from the list.`);
   }
 }
