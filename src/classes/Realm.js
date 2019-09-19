@@ -55,6 +55,16 @@ class RealmAdapter {
       realmBot.lastOnline = Date.now();
     });
   }
+
+  setBroadcastChannel(channel, guild) {
+    this.realm.write(() => {
+      this.realm.create('Guilds', {
+        id: guild.id,
+        channel: channel.id
+      }, true);
+      logger.info(`(REALM): Written guild ${guild.name} channel change to ${channel.name}.`);
+    });
+  }
 }
 
 module.exports = RealmAdapter;

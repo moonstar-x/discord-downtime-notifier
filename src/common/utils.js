@@ -44,7 +44,7 @@ const executeCommand = (client, message, options, commandName) => {
       logger.info(`User ${author} issued command ${commandName} in ${origin}.`);
       command.execute(message, options);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       message.reply("there's been a problem executing your command.");
     }
   } else {
