@@ -44,7 +44,16 @@ class RealmAdapter {
   }
 
   getGuild(id) {
-    return this.realm.objects('Guilds').filtered(`id = "${id}"`);
+    const receivedEntries = this.realm.objects('Guilds').filtered(`id = "${id}"`);
+    return receivedEntries.length > 0 ? receivedEntries[0] : null;
+  }
+
+  setLastOnline(botMember) {
+    this.realm.write(() => {
+      const [realmEntry] = this.realm.objects('Guilds').filtered(`id = "${botMember.guild.id}"`);
+      const realmBot = realmEntry.trackedBots.find(bot => bot.id === botMember.id);
+      realmBot.lastOnline = Date.now();
+    });
   }
 }
 

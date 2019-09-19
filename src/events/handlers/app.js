@@ -60,13 +60,13 @@ const handlePresenceUpdate = (oldMember, newMember, realm) => {
 
   if (status.old === status.new) return;
 
-  const realmEntry = realm.getGuild(newMember.guild.id);
-  if (realmEntry.length === 0) return;
+  const realmGuild = realm.getGuild(newMember.guild.id);
+  if (!realmGuild) return;
 
-  const updatedBotID = realmEntry[0].listening.find( entry => entry == newMember.id);
+  const updatedBotID = realmGuild.listening.find( entry => entry == newMember.id);
   if (!updatedBotID) return;
 
-  broadcastBotStatusChange(newMember, status, realmEntry, realm.client);
+  broadcastBotStatusChange(newMember, status, realmGuild, realm);
 };
 
 const handleReady = (realm) => {

@@ -71,12 +71,11 @@ const formatTimeDelta = (millis) => {
   return result.trim();
 };
 
-const broadcastBotStatusChange = (updatedBot, status, realmEntry, client) => {
-  const { old: oldStatus, new: newStatus } = status;
+const broadcastBotStatusChange = (updatedBot, { old: oldStatus, new: newStatus }, realmGuild, realm) => {
   let messageToSend = null;
 
   if (oldStatus == PRESENCE_STATUS.online && newStatus == PRESENCE_STATUS.offline) {
-    // Set lastOnline for the bot to Date.now() 
+    realm.setLastOnline(updatedBot);
     messageToSend = `The bot ${updatedBot} has gone offline.`;
   } else if (oldStatus != PRESENCE_STATUS.online && newStatus == PRESENCE_STATUS.online) {
     if (/*bot has lastOnline time*/true) {
@@ -88,7 +87,7 @@ const broadcastBotStatusChange = (updatedBot, status, realmEntry, client) => {
     }
   }
 
-  const channel = client.channels.find(realmEntry[0].channel);
+  const channel = realm.client.channels.find(realmGuild.channel);
   channel.send(messageToSend)
     .catch(error => {
       if (error == 'DiscordAPIError: Unknown Channel') {
