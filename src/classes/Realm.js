@@ -76,14 +76,14 @@ class RealmAdapter {
     });
   }
 
-  // TODO: this method works however it doesn't remove the bot object, just the reference.
   removeExtraneousEntries(entries, realmEntry, guild) {
     this.realm.write(() => {
       const trackedIDs = realmEntry.trackedBots.map(bot => bot.id);
       for (const extraneousID of entries) {
         const index = trackedIDs.indexOf(extraneousID);
         if (index > -1) {
-          realmEntry.trackedBots.splice(index, 1);
+          const removedFromArray = realmEntry.trackedBots.splice(index, 1);
+          this.realm.delete(removedFromArray);
           logger.warn(`(REALM): Removed extraneous bot entry in ${guild.name} with id ${extraneousID}.`);
         }
       }
