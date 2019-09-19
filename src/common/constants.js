@@ -68,11 +68,18 @@ const NUMBER_EMOJI_UNICODE = [
   '\u0039\u20E3' // 9
 ];
 
+const MESSAGE_EMBED = {
+  thumbnail: 'https://i.imgur.com/Tqnk48j.png',
+  color: '#ffcb5c',
+  issuesURL: 'https://github.com/moonstar-x/discord-downtime-notifier/issues'
+};
+
 module.exports = {
   MAX_EMBED_FIELD_SIZE,
   PERMISSIONS,
   PRESENCE_STATUS,
   ACTIVITY_TYPE,
   CHANNEL_TYPE,
-  NUMBER_EMOJI_UNICODE
+  NUMBER_EMOJI_UNICODE,
+  MESSAGE_EMBED
 };

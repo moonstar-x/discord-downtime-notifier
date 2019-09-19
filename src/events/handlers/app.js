@@ -46,6 +46,7 @@ const handleMessage = (message, realm) => {
   const options = {
     args,
     commands: realm.client.commands,
+    prefix,
     realm
   };
 

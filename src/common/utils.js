@@ -11,9 +11,9 @@ const logger = new Logger();
 const updatePresence = (client) => {
   const presence = `${client.guilds.size} servers!`;
   client.user.setPresence({
-    activity: {
+    game: {
       name: presence,
-      type: ACTIVITY_TYPE.listening
+      status: ACTIVITY_TYPE.listening
     }
   }).then(() => {
     logger.info(`Presence updated to: ${presence}`);
@@ -35,14 +35,16 @@ const executeCommand = (client, message, options, commandName) => {
   const origin = message.guild ? message.guild.name : `DM with ${author}`;
 
   const command = client.commands.get(commandName);
+  if (!command) return;
+
   const { requiredPermissions } = command;
 
   if (!requiredPermissions || message.member.hasPermission(requiredPermissions)) {
     try {
-      logger.info(`User ${author} issued command ${command} in ${origin}.`);
+      logger.info(`User ${author} issued command ${commandName} in ${origin}.`);
       command.execute(message, options);
     } catch (err) {
-      logger.error(err);
+      console.error(err);
       message.reply("there's been a problem executing your command.");
     }
   } else {
