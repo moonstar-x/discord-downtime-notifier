@@ -1,4 +1,5 @@
-const { MessageEmbed } = require('discord.js');
+const { RichEmbed } = require('discord.js');
+const { MESSAGE_EMBED } = require('../common/constants');
 
 module.exports = {
   name: 'help',
@@ -6,20 +7,19 @@ module.exports = {
   emoji: ':question:',
   requiredPermissions: null,
   execute(message, options) {
-    // Since there will be only about 4 commands, we can safely assume the helpMessage won't go over 1024 characters (DiscordAPI limit).
-    let helpMessage = "";
-    for (const command of options.commands) {
-      helpMessage = helpMessage.concat('\n', `${command[1].emoji} **${options.config.prefix}${command[1].name}** - ${command[1].description}`);
-    }
+    const { commands, prefix } = options;
+    const helpMessage = commands.reduce((message, command) => {
+      message += `${command.emoji} **${prefix}${command.name}** - ${command.description}\n`;
+      return message;
+    }, '');
 
-    const embed = new MessageEmbed()
+    const embed = new RichEmbed()
       .setTitle('Downtime Notifier Help')
-      .setColor('#ffcb5c')
-      .setThumbnail('https://i.imgur.com/Tqnk48j.png')
+      .setColor(MESSAGE_EMBED.color)
+      .setThumbnail(MESSAGE_EMBED.thumbnail)
       .addField('List of available commands:', helpMessage)
       .addField('Spotted a bug?', 
-      "This bot is far from perfect, so in case you found a bug, \
-      please report it in this bot's [**GitHub Issues Page**](https://github.com/moonstar-x/discord-downtime-notifier/issues).");
+      `This bot is far from perfect, so in case you found a bug, please report it in this bot's [**GitHub Issues Page**](${MESSAGE_EMBED.issuesURL}).`);
     
     message.channel.send(embed);
   }

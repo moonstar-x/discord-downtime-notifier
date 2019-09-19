@@ -9,15 +9,6 @@ You can self-host this bot or deploy it on a service like [Heroku](https://www.h
 * [git](https://git-scm.com/)
 * [node.js](https://nodejs.org/en/) *(Up to version 10, tested using Node 10.13.0)*
 
-## Dependencies
-
-| Dependency:                                           | Description:                                                             |
-|-------------------------------------------------------|--------------------------------------------------------------------------|
-| [discord.js](https://github.com/discordjs/discord.js) | A powerful JavaScript library for interacting with the Discord API.      |
-| [fs](https://www.npmjs.com/package/fs)                | File system utilities for Node.js.                                       |
-| [logger](https://github.com/moonstar-x/logger)        | A small logger module for Node.js.                                       |
-| [realm](https://www.npmjs.com/package/realm)          | Realm is a mobile database: an alternative to SQLite & key-value stores. |
-
 ## Installation
 
 ### Self-Hosting
@@ -43,20 +34,9 @@ You can now run your bot:
 
 ### Deploying to Heroku
 
-To deploy to Heroku, you can click on the image below and login to your account.
+This version of the bot will have some issues when hosting it from Heroku because it uses an embedded realm database. When using Heroku, the realm file will be deleted every time the Heroku dyno goes to sleep.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/moonstar-x/discord-downtime-notifier)
-
-You'll then need to add the config vars for your bot, head over to your app's *Dashboard*, click on *Settings* and *Reveal Config Vars*. You'll need to add the following vars with their respective values.
-
-| CONFIG VAR    | VALUE                        |
-|---------------|------------------------------|
-| PREFIX        | YOUR PREFIX HERE.            |
-| DISCORD_TOKEN | YOUR DISCORD BOT TOKEN HERE. |
-
-*Copy the config var exactly as it is and only change the values.*
-
-You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
+The `master` branch contains a version that uses MongoDB instead, you can use that to deploy to Heroku.
 
 ## Usage
 
