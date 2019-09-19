@@ -1,20 +1,25 @@
-// id contains the guild id.
-// channel contains the channel id to broadcast the messages.
-// listening contains a JSON stringified array containing the ids of the bots to listen to.
+const BotSchema = {
+  name: 'Bot',
+  properties: {
+    id: 'string',
+    lastOnline: 'int?'
+  }
+}
 
-const model = {
+const GuildSchema = {
   name: 'Guilds',
   primaryKey: 'id',
   properties: {
     id: 'string',
     channel: 'string?',
-    listening: {
-      type: 'string?[]',
+    trackedBots: {
+      type: 'Bot[]',
       default: []
     }
   }
 }
 
 module.exports = {
-  model
+  BotSchema,
+  GuildSchema
 }
