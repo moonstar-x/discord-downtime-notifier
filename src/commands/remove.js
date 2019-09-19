@@ -1,3 +1,5 @@
+const { PERMISSIONS } = require('../common/constants');
+
 const getEarlyErrorMessage = (realmEntry, memberMention, prefix) => {
   if (!realmEntry) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
@@ -38,7 +40,7 @@ module.exports = {
   name: 'remove',
   description: 'Remove a bot from the downtime check list.',
   emoji: ':x:',
-  requiredPermissions: 'ADMINISTRATOR',
+  requiredPermissions: PERMISSIONS.administrator,
   execute(message, options) {
     const { realm, prefix } = options;
     const [memberMention] = options.args;
