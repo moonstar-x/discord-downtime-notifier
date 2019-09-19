@@ -89,6 +89,14 @@ class RealmAdapter {
       }
     });
   }
+
+  removeBot(indexToRemove, realmEntry, guild, botToRemove) {
+    this.realm.write(() => {
+      const removedFromArray = realmEntry.trackedBots.splice(indexToRemove, 1);
+      this.realm.delete(removedFromArray);
+      logger.info(`(REALM): Written guild ${guild.name} list deletion of ${botToRemove.displayName}.`);
+    }); 
+  }
 }
 
 module.exports = RealmAdapter;
