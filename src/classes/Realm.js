@@ -36,8 +36,8 @@ class RealmAdapter {
 
   deleteGuild(guild) {
     this.realm.write(() => {
-      const realmEntry = this.realm.objects('Guilds').filtered(`id = "${guild.id}"`);
-      // TODO: for each member in listening, remove the entry of the bot.
+      const [realmEntry] = this.realm.objects('Guilds').filtered(`id = "${guild.id}"`);
+      this.realm.delete(realmEntry.trackedBots);
       this.realm.delete(realmEntry);
       logger.info(`(REALM): Deleted entry for ${guild.name}.`);
     });
