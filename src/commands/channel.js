@@ -1,6 +1,6 @@
 const { PERMISSIONS } = require('../common/constants');
 
-const getRealmEntryMessage = (realmEntry, message, prefix) => {
+const getRealmEntryMessage = (realmEntry, channelStore, prefix) => {
   if (!realmEntry) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
@@ -9,7 +9,7 @@ const getRealmEntryMessage = (realmEntry, message, prefix) => {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
 
-  const definedChannel = message.guild.channels.find(channel => channel.id === realmEntry.channel);
+  const definedChannel = channelStore.find(channel => channel.id === realmEntry.channel);
   if (!definedChannel) {
     return `the broadcasting channel stored in the database no longer exists. Please update it with **${prefix}channel** and mention the text channel you want to set.`;
   }
@@ -51,7 +51,7 @@ module.exports = {
 
     if (!channelMention) {
       const realmEntry = realm.getGuild(message.guild.id);
-      message.reply(getRealmEntryMessage(realmEntry, message, prefix));
+      message.reply(getRealmEntryMessage(realmEntry, message.guild.channels, prefix));
       return;
     }
 
@@ -63,6 +63,6 @@ module.exports = {
     }
 
     realm.setBroadcastChannel(newChannel, message.guild);
-    message.reply(`you've changed the broadcasting channel to ${channel}.`);
+    message.reply(`you've changed the broadcasting channel to ${newChannel}.`);
   }
 }

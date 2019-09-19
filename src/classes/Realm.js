@@ -65,6 +65,16 @@ class RealmAdapter {
       logger.info(`(REALM): Written guild ${guild.name} channel change to ${channel.name}.`);
     });
   }
+
+  addNewBot(newBot, realmEntry, guild) {
+    this.realm.write(() => {
+      realmEntry.trackedBots.push({
+        id: newBot.id,
+        lastOnline: null
+      });
+      logger.info(`(REALM): Written guild ${guild.name} list addition of ${newBot.displayName}.`);
+    });
+  }
 }
 
 module.exports = RealmAdapter;
