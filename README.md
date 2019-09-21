@@ -40,16 +40,6 @@ To deploy to Heroku, you can click on the image below and login to your account.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/moonstar-x/discord-downtime-notifier)
 
-You'll then need to add the config vars for your bot, head over to your app's *Dashboard*, click on *Settings* and *Reveal Config Vars*. You'll need to add the following vars with their respective values.
-
-| CONFIG VAR    | VALUE                        |
-|---------------|------------------------------|
-| PREFIX        | YOUR PREFIX HERE.            |
-| DISCORD_TOKEN | YOUR DISCORD BOT TOKEN HERE. |
-| MONGODB_URI   | YOUR MONGODB URI HERE.       |
-
-*Copy the config var exactly as it is and only change the values.*
-
 You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
 
 ## Usage
