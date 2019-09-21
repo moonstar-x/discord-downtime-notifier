@@ -7,7 +7,8 @@ This is a small bot that notifies a server through a message when another bot go
 You can self-host this bot or deploy it on a service like [Heroku](https://www.heroku.com/) for example. If you do decide to self-host, you'll need to install the following:
 
 * [git](https://git-scm.com/)
-* [node.js](https://nodejs.org/en/) *(Up to version 10, tested using Node 10.13.0)*
+* [node.js](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.com/)
 
 ## Installation
 
@@ -21,7 +22,8 @@ Then, rename the file *settings.json.example* to *settings.json* and edit the va
 
     {
       "discord_token": "YOUR_DISCORD_TOKEN",
-      "prefix": "YOUR_PREFIX_HERE"
+      "prefix": "YOUR_PREFIX_HERE",
+      "mongodb_uri": "YOUR_MONGO_DB_URI_HERE"
     }
 
 Install the dependencies:
@@ -34,9 +36,11 @@ You can now run your bot:
 
 ### Deploying to Heroku
 
-This version of the bot will have some issues when hosting it from Heroku because it uses an embedded realm database. When using Heroku, the realm file will be deleted every time the Heroku dyno goes to sleep.
+To deploy to Heroku, you can click on the image below and login to your account.
 
-The `master` branch contains a version that uses MongoDB instead, you can use that to deploy to Heroku.
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/moonstar-x/discord-downtime-notifier)
+
+You can now go back to your app's *Overview*, make sure you disable the *web* dyno and enable the *bot* dyno. Your bot should now be up and running. Remember you can always check your bot's console if you access the *View Logs* in the *More* dropdown menu.
 
 ## Usage
 

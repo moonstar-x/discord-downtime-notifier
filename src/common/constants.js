@@ -79,6 +79,10 @@ const MESSAGE_SEND_ERRORS = {
   permissions: 'DiscordAPIError: Missing Permissions'
 };
 
+const MONGO_ERROR_CODES = {
+  duplicate: 11000
+};
+
 module.exports = {
   MAX_EMBED_FIELD_SIZE,
   PERMISSIONS,
@@ -87,5 +91,6 @@ module.exports = {
   CHANNEL_TYPE,
   NUMBER_EMOJI_UNICODE,
   MESSAGE_EMBED,
-  MESSAGE_SEND_ERRORS
+  MESSAGE_SEND_ERRORS,
+  MONGO_ERROR_CODES
 };

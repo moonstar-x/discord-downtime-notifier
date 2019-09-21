@@ -1,5 +1,18 @@
 {
   "name": "Discord Downtime Notifier",
   "description": "A small Discord bot that sends a message when a specified bot goes offline.",
-  "repository": "https://github.com/moonstar-x/discord-downtime-notifier"
+  "repository": "https://github.com/moonstar-x/discord-downtime-notifier",
+  "logo": "https://i.imgur.com/Tqnk48j.png",
+  "env": {
+    "PREFIX": {
+      "description": "Your bot's command prefix.",
+      "value": "d!",
+      "required": true
+    },
+    "DISCORD_TOKEN": {
+      "description": "Your bot's bot token.",
+      "required": true
+    }
+  },
+  "addons": ["mongolab"]
 }

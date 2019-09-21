@@ -78,25 +78,25 @@ const formatTimeDelta = (millis) => {
   return result.trim();
 };
 
-const broadcastBotStatusChange = (updatedBot, { old: oldStatus, new: newStatus }, realmGuild, realm) => {
+const broadcastBotStatusChange = (updatedBot, { old: oldStatus, new: newStatus }, fetchedGuild, mongo) => {
   let messageToSend = '';
 
   if (oldStatus === PRESENCE_STATUS.online && newStatus === PRESENCE_STATUS.offline) {
-    realm.setLastOnline(updatedBot, realmGuild, Date.now());
+    mongo.setLastOnline(updatedBot, Date.now());
     messageToSend = `The bot ${updatedBot} has gone offline.`;
   } else if (oldStatus !== PRESENCE_STATUS.online && newStatus === PRESENCE_STATUS.online) {
-    const storedBot = realmGuild.trackedBots.find(bot => bot.id === updatedBot.id);
+    const storedBot = fetchedGuild.trackedBots.find(bot => bot.id === updatedBot.id);
 
     if (storedBot.lastOnline) {
       const offlineTime = Date.now() - storedBot.lastOnline;
-      realm.setLastOnline(updatedBot, realmGuild, null);
+      mongo.setLastOnline(updatedBot, null);
       messageToSend = `The bot ${updatedBot} is now online. It has been offline for ${formatTimeDelta(offlineTime)}.`;
     } else {
       messageToSend = `The bot ${updatedBot} is now online.`;
     }
   }
 
-  const channel = realm.client.channels.find(channel => channel.id === realmGuild.channel);
+  const channel = mongo.client.channels.find(channel => channel.id === fetchedGuild.channel);
   channel.send(messageToSend)
     .catch(error => {
       const { displayName: botName, guild: { name: guildName } } = updatedBot;

@@ -19,34 +19,43 @@ const handleDisconnect = (event) => {
   process.exit(1);
 };
 
-const handleGuildCreate = (guild, realm) => {
+const handleGuildCreate = (guild, mongo) => {
   logger.info(`Joined ${guild.name} guild!`);
-  updatePresence(realm.client);
-  realm.createGuild(guild);
+  updatePresence(mongo.client);
+  mongo.createGuild(guild);
 };
 
-const handleGuildDelete = (guild, realm) => {
+const handleGuildDelete = (guild, mongo) => {
   logger.info(`Left ${guild.name} guild!`);
-  updatePresence(realm.client);
-  realm.deleteGuild(guild);
+  updatePresence(mongo.client);
+  mongo.deleteGuild(guild);
 };
 
 const handleGuildUnavailable = (guild) => {
   logger.warn(`Guild ${guild.name} is currently unavailable!`);
 };
 
-const handleMemberDelete = (member, realm) => {
-  const realmGuild = realm.getGuild(member.guild.id);
-  const storedBotIndex = realmGuild.trackedBots.findIndex(bot => bot.id === member.id);
+const handleMemberDelete = (member, mongo) => {
+  mongo.getGuild(member.guild.id)
+    .then((guild) => {
+      if (!guild) {
+        return;
+      }
 
-  if (!storedBotIndex) {
-    return;
-  }
+      const shouldMemberBeDeleted = guild.trackedBots.some(bot => bot.id === member.id);
 
-  realm.removeBot(storedBotIndex, realmGuild, member.guild, member);
+      if (!shouldMemberBeDeleted) {
+        return;
+      }
+
+      mongo.removeBot(member, member.guild);
+    })
+    .catch((error) => {
+      throw error;
+    });
 };
 
-const handleMessage = (message, realm) => {
+const handleMessage = (message, mongo) => {
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return;
   }
@@ -56,15 +65,15 @@ const handleMessage = (message, realm) => {
 
   const options = {
     args,
-    commands: realm.client.commands,
+    commands: mongo.client.commands,
     prefix,
-    realm
+    mongo
   };
 
-  executeCommand(realm.client, message, options, command);
+  executeCommand(mongo.client, message, options, command);
 };
 
-const handlePresenceUpdate = (oldMember, newMember, realm) => {
+const handlePresenceUpdate = (oldMember, newMember, mongo) => {
   const status = {
     old: oldMember.presence.status,
     new: newMember.presence.status
@@ -72,19 +81,28 @@ const handlePresenceUpdate = (oldMember, newMember, realm) => {
 
   if (status.old === status.new) return;
 
-  const realmGuild = realm.getGuild(newMember.guild.id);
-  if (!realmGuild) return;
+  mongo.getGuild(newMember.guild.id)
+    .then(guild => {
+      if (!guild) {
+        return;
+      }
 
-  const updatedBotID = realmGuild.trackedBots.find(entry => entry.id === newMember.id);
-  if (!updatedBotID) return;
+      const isBotTracked = guild.trackedBots.some(bot => bot.id === newMember.id);
+      if (!isBotTracked) {
+        return;
+      }
 
-  broadcastBotStatusChange(newMember, status, realmGuild, realm);
+      broadcastBotStatusChange(newMember, status, guild, mongo);
+    })
+    .catch(error => {
+      throw error;
+    });
 };
 
-const handleReady = (realm) => {
+const handleReady = (mongo) => {
   logger.info('Connected to Discord! - Ready.');
-  updatePresence(realm.client);
-  realm.initializeRealm();
+  updatePresence(mongo.client);
+  mongo.initializeMongo();
 };
 
 const handleReconnecting = () => {
