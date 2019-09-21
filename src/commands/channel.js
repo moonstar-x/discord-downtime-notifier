@@ -1,15 +1,15 @@
 const { PERMISSIONS } = require('../common/constants');
 
-const getRealmEntryMessage = (realmGuild, channelStore, prefix) => {
-  if (!realmGuild) {
+const getGuildEntryMessage = (guild, channelStore, prefix) => {
+  if (!guild) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
 
-  if (!realmGuild.channel) {
+  if (!guild.channel) {
     return `a broadcasting text channel is yet to be defined. You can define one by running **${prefix}channel** and mentioning the text channel you want to set.`;
   }
 
-  const definedChannel = channelStore.find(channel => channel.id === realmGuild.channel);
+  const definedChannel = channelStore.find(channel => channel.id === guild.channel);
   if (!definedChannel) {
     return `the broadcasting channel stored in the database no longer exists. Please update it with **${prefix}channel** and mention the text channel you want to set.`;
   }
@@ -46,12 +46,17 @@ module.exports = {
   emoji: ':loudspeaker:',
   requiredPermissions: PERMISSIONS.administrator,
   execute(message, options) {
-    const { realm, prefix } = options;
+    const { mongo, prefix } = options;
     const [channelMention] = options.args;
 
     if (!channelMention) {
-      const realmGuild = realm.getGuild(message.guild.id);
-      message.reply(getRealmEntryMessage(realmGuild, message.guild.channels, prefix));
+      mongo.getGuild(message.guild.id)
+        .then(storedGuild => {
+          message.reply(getGuildEntryMessage(storedGuild, message.guild.channels, prefix));
+        })
+        .catch(error => {
+          throw error;
+        });
       return;
     }
 
@@ -62,7 +67,7 @@ module.exports = {
       return;
     }
 
-    realm.setBroadcastChannel(newChannel, message.guild);
+    mongo.setBroadcastChannel(newChannel, message.guild);
     message.reply(`you've changed the broadcasting channel to ${newChannel}.`);
   }
 }
