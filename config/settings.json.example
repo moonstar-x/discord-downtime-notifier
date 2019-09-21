@@ -1,4 +1,5 @@
 {
   "discord_token": "YOUR DISCORD TOKEN HERE",
-  "prefix": "d!"
+  "prefix": "d!",
+  "mongodb_uri": "mongodb://user:pass@url.com:port/db_name"
 }
