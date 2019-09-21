@@ -15,13 +15,13 @@ const parseBotMention = (memberStore, memberMention) => {
   return memberStore.find(member => member.id === mentionedID);
 };
 
-const validateBotBeforeRemoving = (botToRemove, realmGuild) => {
+const validateBotBeforeRemoving = (botToRemove, guild) => {
   const result = {
     error: false,
     message: null,
   };
 
-  const indexToRemove = realmGuild.trackedBots.findIndex(entry => entry.id === botToRemove.id);
+  const indexToRemove = guild.trackedBots.findIndex(entry => entry.id === botToRemove.id);
 
   if (!botToRemove) {
     result.error = true;
@@ -52,7 +52,7 @@ module.exports = {
         }
 
         const botToRemove = parseBotMention(message.guild.members, memberMention);
-        const botToRemoveValidation = validateBotBeforeRemoving(botToRemove, realmGuild);
+        const botToRemoveValidation = validateBotBeforeRemoving(botToRemove, guild);
 
         if (botToRemoveValidation.error) {
           message.reply(botToRemoveValidation.message);
