@@ -35,7 +35,7 @@ module.exports = {
           extraneousIDs: []
         });
 
-        realm.removeExtraneousEntries(storedBotsInGuild.extraneousIDs, message.guild);
+        mongo.removeExtraneousEntries(storedBotsInGuild.extraneousIDs, message.guild);
 
         message.reply(`the list contains: ${storedBotsInGuild.storedBots.join(' ')}.`);
       })

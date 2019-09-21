@@ -156,6 +156,9 @@ class MongoAdapter {
       }
 
       const newTrackedBots = fetchedGuild.trackedBots.filter(storedBot => entries.indexOf(storedBot.id) < 0);
+      if (newTrackedBots.length === fetchedGuild.trackedBots.length) {
+        return;
+      }
       fetchedGuild.trackedBots = newTrackedBots;
 
       fetchedGuild.save((error) => {
