@@ -102,7 +102,7 @@ const handlePresenceUpdate = (oldMember, newMember, mongo) => {
 const handleReady = (mongo) => {
   logger.info('Connected to Discord! - Ready.');
   updatePresence(mongo.client);
-  mongo.initializeRealm();
+  mongo.initializeMongo();
 };
 
 const handleReconnecting = () => {
