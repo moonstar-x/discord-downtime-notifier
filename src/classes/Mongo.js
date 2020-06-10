@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const { Logger } = require('logger');
+const logger = require('@greencoast/logger');
 const mongodbURI = process.env.MONGODB_URI || require('../../config/settings.json').mongodb_uri;
 const mongoEvents = require('../events/mongo');
 const mongoHandlers = require('../events/handlers/mongo');
 const { GuildSchema }= require('../../data/schemas');
 const { MONGO_ERROR_CODES } = require('../common/constants');
-
-const logger = new Logger();
 
 class MongoAdapter {
   constructor(client) {
