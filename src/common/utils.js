@@ -10,10 +10,11 @@ const prefix = process.env.PREFIX || require('../../config/settings.json').prefi
 const updatePresence = (client) => {
   const presence = `${client.guilds.cache.array().length} servers!`;
   client.user.setPresence({
-    game: {
+    activity: {
       name: presence,
-      status: ACTIVITY_TYPE.listening
-    }
+      type: ACTIVITY_TYPE.listening
+    },
+    status: PRESENCE_STATUS.online
   }).then(() => {
     logger.info(`Presence updated to: ${presence}`);
   }).catch((err) => {
