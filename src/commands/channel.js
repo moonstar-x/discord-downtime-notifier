@@ -38,7 +38,7 @@ const validateNewChannel = (newChannel) => {
   }
 
   return result;
-}
+};
 
 module.exports = {
   name: 'channel',
@@ -70,4 +70,4 @@ module.exports = {
     mongo.setBroadcastChannel(newChannel, message.guild);
     message.reply(`you've changed the broadcasting channel to ${newChannel}.`);
   }
-}
+};

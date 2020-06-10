@@ -32,7 +32,7 @@ const validateBotBeforeRemoving = (botToRemove, guild) => {
   }
 
   return result;
-}
+};
 
 module.exports = {
   name: 'remove',
@@ -66,4 +66,4 @@ module.exports = {
         throw error;
       });
   }
-}
+};
