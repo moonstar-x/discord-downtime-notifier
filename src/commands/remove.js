@@ -12,16 +12,16 @@ const getEarlyErrorMessage = (guild, memberMention, prefix) => {
 const parseBotMention = (memberStore, memberMention) => {
   const numberRegex = /[^0-9]+/gi;
   const mentionedID = memberMention.replace(numberRegex, '');
-  return memberStore.find(member => member.id === mentionedID);
+  return memberStore.cache.find((member) => member.id === mentionedID);
 };
 
 const validateBotBeforeRemoving = (botToRemove, guild) => {
   const result = {
     error: false,
-    message: null,
+    message: null
   };
 
-  const indexToRemove = guild.trackedBots.findIndex(entry => entry.id === botToRemove.id);
+  const indexToRemove = guild.trackedBots.findIndex((entry) => entry.id === botToRemove.id);
 
   if (!botToRemove) {
     result.error = true;
@@ -32,7 +32,7 @@ const validateBotBeforeRemoving = (botToRemove, guild) => {
   }
 
   return result;
-}
+};
 
 module.exports = {
   name: 'remove',
@@ -44,7 +44,7 @@ module.exports = {
     const [memberMention] = options.args;
 
     mongo.getGuild(message.guild.id)
-      .then(guild => {
+      .then((guild) => {
         const earlyErrorMessage = getEarlyErrorMessage(guild, memberMention, prefix);
         if (earlyErrorMessage) {
           message.reply(earlyErrorMessage);
@@ -62,8 +62,8 @@ module.exports = {
         mongo.removeBot(botToRemove, message.guild);
         message.reply(`successfully removed ${botToRemove} from the list.`);
       })
-      .catch(error => {
+      .catch((error) => {
         throw error;
       });
   }
-}
+};

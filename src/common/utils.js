@@ -1,9 +1,6 @@
-const { Logger } = require('logger');
+const logger = require('@greencoast/logger');
 const { ACTIVITY_TYPE, PRESENCE_STATUS, MESSAGE_SEND_ERRORS } = require('./constants');
-
 const prefix = process.env.PREFIX || require('../../config/settings.json').prefix;
-
-const logger = new Logger();
 
 /**
  * Updates the presence of the Discord bot.
@@ -11,12 +8,13 @@ const logger = new Logger();
  * @returns {void}
  */
 const updatePresence = (client) => {
-  const presence = `${client.guilds.size} servers!`;
+  const presence = `${client.guilds.cache.array().length} servers!`;
   client.user.setPresence({
-    game: {
+    activity: {
       name: presence,
-      status: ACTIVITY_TYPE.listening
-    }
+      type: ACTIVITY_TYPE.listening
+    },
+    status: PRESENCE_STATUS.online
   }).then(() => {
     logger.info(`Presence updated to: ${presence}`);
   }).catch((err) => {
@@ -37,7 +35,9 @@ const executeCommand = (client, message, options, commandName) => {
   const origin = message.guild ? message.guild.name : `DM with ${author}`;
 
   const command = client.commands.get(commandName);
-  if (!command) return;
+  if (!command) {
+    return;
+  }
 
   const { requiredPermissions } = command;
 
@@ -51,7 +51,7 @@ const executeCommand = (client, message, options, commandName) => {
     }
   } else {
     message.reply('only **Administrators** can execute this command.');
-  } 
+  }
 };
 
 const formatTimeDelta = (millis) => {
@@ -66,7 +66,7 @@ const formatTimeDelta = (millis) => {
     hours,
     minutes,
     seconds
-  }
+  };
 
   const result = Object.keys(time).reduce((timeString, key) => {
     if (time[key]) {
@@ -74,7 +74,7 @@ const formatTimeDelta = (millis) => {
     }
     return timeString;
   }, '');
-  
+
   return result.trim();
 };
 
@@ -85,7 +85,7 @@ const broadcastBotStatusChange = (updatedBot, { old: oldStatus, new: newStatus }
     mongo.setLastOnline(updatedBot, Date.now());
     messageToSend = `The bot ${updatedBot} has gone offline.`;
   } else if (oldStatus !== PRESENCE_STATUS.online && newStatus === PRESENCE_STATUS.online) {
-    const storedBot = fetchedGuild.trackedBots.find(bot => bot.id === updatedBot.id);
+    const storedBot = fetchedGuild.trackedBots.find((bot) => bot.id === updatedBot.id);
 
     if (storedBot.lastOnline) {
       const offlineTime = Date.now() - storedBot.lastOnline;
@@ -94,15 +94,25 @@ const broadcastBotStatusChange = (updatedBot, { old: oldStatus, new: newStatus }
     } else {
       messageToSend = `The bot ${updatedBot} is now online.`;
     }
+  } else {
+    return;
   }
 
-  const channel = mongo.client.channels.find(channel => channel.id === fetchedGuild.channel);
+  const { displayName: botName, guild: { name: guildName } } = updatedBot;
+  const channel = mongo.client.channels.cache.find((channel) => channel.id === fetchedGuild.channel);
+
+  if (!channel) {
+    updatedBot.guild.owner.send(`The bot **${botName}** in the server **${guildName}** has changed its status but I couldn't send a message to the channel you set-up previously. It has probably been deleted. Please, change the broadcasting channel in **${guildName}** with **${prefix}channel** and mention the channel you want to set-up.`);
+    return;
+  }
+
   channel.send(messageToSend)
-    .catch(error => {
-      const { displayName: botName, guild: { name: guildName } } = updatedBot;
-      if (error === MESSAGE_SEND_ERRORS.unknown) {
+    .catch((error) => {
+      const errorName = error.toString();
+
+      if (errorName === MESSAGE_SEND_ERRORS.unknown) {
         updatedBot.guild.owner.send(`The bot **${botName}** in the server **${guildName}** has changed its status but I couldn't send a message to the channel you set-up previously. It has probably been deleted. Please, change the broadcasting channel in **${guildName}** with **${prefix}channel** and mention the channel you want to set-up.`);
-      } else if (error === MESSAGE_SEND_ERRORS.permissions) {
+      } else if (errorName === MESSAGE_SEND_ERRORS.permissions) {
         updatedBot.guild.owner.send(`The bot **${botName}** in the server **${guildName}** has changed its status but I couldn't send a message to the channel you set-up previously because I don't have permissions to send messages there. Please, allow me to send messages in the set channel or change the broadcasting channel in **${guildName}** with **${prefix}channel** and mention the channel you want to set-up.`);
       } else {
         updatedBot.guild.owner.send(`The bot **${botName}** in the server **${guildName}** has changed its status but I couldn't send a message to the channel you set-up because something unexpected went wrong.`);

@@ -1,9 +1,7 @@
-const { Logger } = require('logger');
+const logger = require('@greencoast/logger');
 const { updatePresence, executeCommand, broadcastBotStatusChange } = require('../../common/utils');
-
 const prefix = process.env.PREFIX || require('../../../config/settings.json').prefix;
-
-const logger = new Logger();
+const { PRESENCE_STATUS } = require('../../common/constants');
 
 const handleDebug = (info) => {
   logger.debug(info);
@@ -13,20 +11,14 @@ const handleError = (error) => {
   logger.error(error);
 };
 
-const handleDisconnect = (event) => {
-  logger.error(`The WebSocket connection has closed with code ${event.code} and won't try reconnect.`);
-  logger.error(event.reason);
-  process.exit(1);
-};
-
 const handleGuildCreate = (guild, mongo) => {
-  logger.info(`Joined ${guild.name} guild!`);
+  logger.info(`Joined the guild ${guild.name}!`);
   updatePresence(mongo.client);
   mongo.createGuild(guild);
 };
 
 const handleGuildDelete = (guild, mongo) => {
-  logger.info(`Left ${guild.name} guild!`);
+  logger.info(`Left the guild ${guild.name}!`);
   updatePresence(mongo.client);
   mongo.deleteGuild(guild);
 };
@@ -55,6 +47,11 @@ const handleMemberDelete = (member, mongo) => {
     });
 };
 
+const handleInvalidated = () => {
+  logger.fatal('Client connection invalidated, terminating execution with code 1.');
+  process.exit(1);
+};
+
 const handleMessage = (message, mongo) => {
   if (!message.content.startsWith(prefix) || message.author.bot) {
     return;
@@ -73,28 +70,30 @@ const handleMessage = (message, mongo) => {
   executeCommand(mongo.client, message, options, command);
 };
 
-const handlePresenceUpdate = (oldMember, newMember, mongo) => {
+const handlePresenceUpdate = (oldPresence, newPresence, mongo) => {
   const status = {
-    old: oldMember.presence.status,
-    new: newMember.presence.status
+    old: oldPresence ? oldPresence.status : PRESENCE_STATUS.offline,
+    new: newPresence.status
+  };
+
+  if (status.old === status.new) {
+    return;
   }
 
-  if (status.old === status.new) return;
-
-  mongo.getGuild(newMember.guild.id)
-    .then(guild => {
+  mongo.getGuild(newPresence.guild.id)
+    .then((guild) => {
       if (!guild) {
         return;
       }
 
-      const isBotTracked = guild.trackedBots.some(bot => bot.id === newMember.id);
+      const isBotTracked = guild.trackedBots.some((bot) => bot.id === newPresence.userID);
       if (!isBotTracked) {
         return;
       }
-
-      broadcastBotStatusChange(newMember, status, guild, mongo);
+      const botMember = newPresence.guild.members.cache.find((member) => member.id === newPresence.userID);
+      broadcastBotStatusChange(botMember, status, guild, mongo);
     })
-    .catch(error => {
+    .catch((error) => {
       throw error;
     });
 };
@@ -105,14 +104,6 @@ const handleReady = (mongo) => {
   mongo.initializeMongo();
 };
 
-const handleReconnecting = () => {
-  logger.warn('Lost connection to the WebSocket. Attempting to reconnect...');
-};
-
-const handleResume = () => {
-  logger.info('Connection to the WebSocket has been resumed.');
-};
-
 const handleWarn = (info) => {
   logger.warn(info);
 };
@@ -120,15 +111,13 @@ const handleWarn = (info) => {
 module.exports = {
   handleDebug,
   handleError,
-  handleDisconnect,
   handleGuildCreate,
   handleGuildDelete,
   handleMemberDelete,
   handleGuildUnavailable,
+  handleInvalidated,
   handleMessage,
   handlePresenceUpdate,
   handleReady,
-  handleReconnecting,
-  handleResume,
   handleWarn
 };

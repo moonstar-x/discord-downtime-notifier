@@ -14,7 +14,7 @@ module.exports = {
   execute(message, options) {
     const { mongo, prefix } = options;
     mongo.getGuild(message.guild.id)
-      .then(guild => {
+      .then((guild) => {
         const storedGuildMessage = getGuildEntryMessage(guild, prefix);
         if (storedGuildMessage) {
           message.reply(storedGuildMessage);
@@ -23,7 +23,7 @@ module.exports = {
 
         const storedBotsInGuild = Object.keys(guild.trackedBots).reduce((botsFromGuild, key) => {
           const currentID = guild.trackedBots[key].id;
-          const foundBot = message.guild.members.find(member => member.id === currentID);
+          const foundBot = message.guild.members.cache.find((member) => member.id === currentID);
           if (foundBot) {
             botsFromGuild.storedBots.push(foundBot);
           } else {
@@ -39,8 +39,8 @@ module.exports = {
 
         message.reply(`the list contains: ${storedBotsInGuild.storedBots.join(' ')}.`);
       })
-      .catch(error => {
+      .catch((error) => {
         throw error;
-      });    
+      });
   }
-}
+};

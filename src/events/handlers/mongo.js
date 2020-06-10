@@ -1,6 +1,4 @@
-const { Logger } = require('logger');
-
-const logger = new Logger();
+const logger = require('@greencoast/logger');
 
 const handleConnected = () => {
   logger.info('(MONGO): Connected to MongoDB.');

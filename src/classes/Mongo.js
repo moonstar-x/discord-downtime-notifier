@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const { Logger } = require('logger');
+const logger = require('@greencoast/logger');
 const mongodbURI = process.env.MONGODB_URI || require('../../config/settings.json').mongodb_uri;
-const mongoEvents = require('../events/mongoEvents');
+const mongoEvents = require('../events/mongo');
 const mongoHandlers = require('../events/handlers/mongo');
 const { GuildSchema }= require('../../data/schemas');
 const { MONGO_ERROR_CODES } = require('../common/constants');
-
-const logger = new Logger();
 
 class MongoAdapter {
   constructor(client) {
@@ -28,7 +26,7 @@ class MongoAdapter {
   }
 
   initializeMongo() {
-    this.client.guilds.tap((guild) => {
+    this.client.guilds.cache.forEach((guild) => {
       this.createGuild(guild);
     });
   }
@@ -85,7 +83,7 @@ class MongoAdapter {
         return;
       }
 
-      const storedBot = fetchedGuild.trackedBots.find(bot => bot.id === botID);
+      const storedBot = fetchedGuild.trackedBots.find((bot) => bot.id === botID);
       storedBot.lastOnline = timestamp;
 
       fetchedGuild.save((error) => {
@@ -120,7 +118,7 @@ class MongoAdapter {
   addNewBot(newBot, guild) {
     const { id: botID, displayName: botName } = newBot;
     const { id: guildID, name: guildName } = guild;
-    
+
     this.MongoGuild.findOne({
       id: guildID
     }, (error, fetchedGuild) => {
@@ -183,8 +181,7 @@ class MongoAdapter {
         return;
       }
 
-      const newTrackedBots = fetchedGuild.trackedBots.filter(storedBot => storedBot.id !== botID);
-      fetchedGuild.trackedBots = newTrackedBots;
+      fetchedGuild.trackedBots = fetchedGuild.trackedBots.filter((storedBot) => storedBot.id !== botID);
 
       fetchedGuild.save((error) => {
         if (error) {

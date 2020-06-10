@@ -17,7 +17,7 @@ const getEarlyErrorMessage = (guild, memberMention, prefix) => {
 const parseBotMention = (memberStore, memberMention) => {
   const numberRegex = /[^0-9]+/gi;
   const mentionedID = memberMention.replace(numberRegex, '');
-  return memberStore.find(member => member.id === mentionedID);
+  return memberStore.cache.find((member) => member.id === mentionedID);
 };
 
 const validateNewBot = (newBot, guild) => {
@@ -34,7 +34,7 @@ const validateNewBot = (newBot, guild) => {
     result.message = `the user ${newBot} is not a bot. You can only add bots to this list.`;
   }
 
-  const storedBotID = guild.trackedBots.find(entry => entry.id === newBot.id);
+  const storedBotID = guild.trackedBots.find((entry) => entry.id === newBot.id);
   if (storedBotID) {
     result.error = true;
     result.message = `the bot ${newBot} is already in the list.`;
@@ -53,7 +53,7 @@ module.exports = {
     const [memberMention] = options.args;
 
     mongo.getGuild(message.guild.id)
-      .then(guild => {
+      .then((guild) => {
         const earlyErrorMessage = getEarlyErrorMessage(guild, memberMention, prefix);
         if (earlyErrorMessage) {
           message.reply(earlyErrorMessage);
@@ -71,8 +71,8 @@ module.exports = {
         mongo.addNewBot(newBot, message.guild);
         message.reply(`successfully added ${newBot} to the list.`);
       })
-      .catch(error => {
+      .catch((error) => {
         throw error;
-      }); 
+      });
   }
-}
+};
