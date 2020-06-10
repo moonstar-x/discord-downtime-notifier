@@ -70,31 +70,31 @@ const handleMessage = (message, mongo) => {
 };
 
 const handlePresenceUpdate = (oldMember, newMember, mongo) => {
-  const status = {
-    old: oldMember.presence.status,
-    new: newMember.presence.status
-  };
-
-  if (status.old === status.new) {
-    return;
-  }
-
-  mongo.getGuild(newMember.guild.id)
-    .then(guild => {
-      if (!guild) {
-        return;
-      }
-
-      const isBotTracked = guild.trackedBots.some(bot => bot.id === newMember.id);
-      if (!isBotTracked) {
-        return;
-      }
-
-      broadcastBotStatusChange(newMember, status, guild, mongo);
-    })
-    .catch(error => {
-      throw error;
-    });
+  // const status = {
+  //   old: oldMember.presence.status,
+  //   new: newMember.presence.status
+  // };
+  //
+  // if (status.old === status.new) {
+  //   return;
+  // }
+  //
+  // mongo.getGuild(newMember.guild.id)
+  //   .then(guild => {
+  //     if (!guild) {
+  //       return;
+  //     }
+  //
+  //     const isBotTracked = guild.trackedBots.some(bot => bot.id === newMember.id);
+  //     if (!isBotTracked) {
+  //       return;
+  //     }
+  //
+  //     broadcastBotStatusChange(newMember, status, guild, mongo);
+  //   })
+  //   .catch(error => {
+  //     throw error;
+  //   });
 };
 
 const handleReady = (mongo) => {
