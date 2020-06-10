@@ -1,9 +1,6 @@
-const { Logger } = require('logger');
+const logger = require('@greencoast/logger');
 const { ACTIVITY_TYPE, PRESENCE_STATUS, MESSAGE_SEND_ERRORS } = require('./constants');
-
 const prefix = process.env.PREFIX || require('../../config/settings.json').prefix;
-
-const logger = new Logger();
 
 /**
  * Updates the presence of the Discord bot.
@@ -11,7 +8,7 @@ const logger = new Logger();
  * @returns {void}
  */
 const updatePresence = (client) => {
-  const presence = `${client.guilds.size} servers!`;
+  const presence = `${client.guilds.cache.array().length} servers!`;
   client.user.setPresence({
     game: {
       name: presence,
@@ -37,7 +34,9 @@ const executeCommand = (client, message, options, commandName) => {
   const origin = message.guild ? message.guild.name : `DM with ${author}`;
 
   const command = client.commands.get(commandName);
-  if (!command) return;
+  if (!command) {
+    return;
+  }
 
   const { requiredPermissions } = command;
 
@@ -51,7 +50,7 @@ const executeCommand = (client, message, options, commandName) => {
     }
   } else {
     message.reply('only **Administrators** can execute this command.');
-  } 
+  }
 };
 
 const formatTimeDelta = (millis) => {
@@ -66,7 +65,7 @@ const formatTimeDelta = (millis) => {
     hours,
     minutes,
     seconds
-  }
+  };
 
   const result = Object.keys(time).reduce((timeString, key) => {
     if (time[key]) {
@@ -74,7 +73,7 @@ const formatTimeDelta = (millis) => {
     }
     return timeString;
   }, '');
-  
+
   return result.trim();
 };
 
