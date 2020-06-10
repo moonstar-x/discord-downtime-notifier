@@ -1,6 +1,7 @@
 const logger = require('@greencoast/logger');
 const { updatePresence, executeCommand, broadcastBotStatusChange } = require('../../common/utils');
 const prefix = process.env.PREFIX || require('../../../config/settings.json').prefix;
+const { PRESENCE_STATUS } = require('../../common/constants');
 
 const handleDebug = (info) => {
   logger.debug(info);
@@ -69,32 +70,32 @@ const handleMessage = (message, mongo) => {
   executeCommand(mongo.client, message, options, command);
 };
 
-const handlePresenceUpdate = (oldMember, newMember, mongo) => {
-  // const status = {
-  //   old: oldMember.presence.status,
-  //   new: newMember.presence.status
-  // };
-  //
-  // if (status.old === status.new) {
-  //   return;
-  // }
-  //
-  // mongo.getGuild(newMember.guild.id)
-  //   .then(guild => {
-  //     if (!guild) {
-  //       return;
-  //     }
-  //
-  //     const isBotTracked = guild.trackedBots.some(bot => bot.id === newMember.id);
-  //     if (!isBotTracked) {
-  //       return;
-  //     }
-  //
-  //     broadcastBotStatusChange(newMember, status, guild, mongo);
-  //   })
-  //   .catch(error => {
-  //     throw error;
-  //   });
+const handlePresenceUpdate = (oldPresence, newPresence, mongo) => {
+  const status = {
+    old: oldPresence ? oldPresence.status : PRESENCE_STATUS.offline,
+    new: newPresence.status
+  };
+
+  if (status.old === status.new) {
+    return;
+  }
+
+  mongo.getGuild(newPresence.guild.id)
+    .then((guild) => {
+      if (!guild) {
+        return;
+      }
+
+      const isBotTracked = guild.trackedBots.some((bot) => bot.id === newPresence.userID);
+      if (!isBotTracked) {
+        return;
+      }
+      const botMember = newPresence.guild.members.cache.find((member) => member.id === newPresence.userID);
+      broadcastBotStatusChange(botMember, status, guild, mongo);
+    })
+    .catch((error) => {
+      throw error;
+    });
 };
 
 const handleReady = (mongo) => {
