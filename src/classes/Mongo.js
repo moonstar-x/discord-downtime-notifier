@@ -26,7 +26,7 @@ class MongoAdapter {
   }
 
   initializeMongo() {
-    this.client.guilds.tap((guild) => {
+    this.client.guilds.cache.forEach((guild) => {
       this.createGuild(guild);
     });
   }
@@ -83,7 +83,7 @@ class MongoAdapter {
         return;
       }
 
-      const storedBot = fetchedGuild.trackedBots.find(bot => bot.id === botID);
+      const storedBot = fetchedGuild.trackedBots.find((bot) => bot.id === botID);
       storedBot.lastOnline = timestamp;
 
       fetchedGuild.save((error) => {
@@ -181,8 +181,7 @@ class MongoAdapter {
         return;
       }
 
-      const newTrackedBots = fetchedGuild.trackedBots.filter(storedBot => storedBot.id !== botID);
-      fetchedGuild.trackedBots = newTrackedBots;
+      fetchedGuild.trackedBots = fetchedGuild.trackedBots.filter((storedBot) => storedBot.id !== botID);
 
       fetchedGuild.save((error) => {
         if (error) {
