@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Logger } = require('logger');
 const mongodbURI = process.env.MONGODB_URI || require('../../config/settings.json').mongodb_uri;
-const mongoEvents = require('../events/mongoEvents');
+const mongoEvents = require('../events/mongo');
 const mongoHandlers = require('../events/handlers/mongo');
 const { GuildSchema }= require('../../data/schemas');
 const { MONGO_ERROR_CODES } = require('../common/constants');
@@ -120,7 +120,7 @@ class MongoAdapter {
   addNewBot(newBot, guild) {
     const { id: botID, displayName: botName } = newBot;
     const { id: guildID, name: guildName } = guild;
-    
+
     this.MongoGuild.findOne({
       id: guildID
     }, (error, fetchedGuild) => {
