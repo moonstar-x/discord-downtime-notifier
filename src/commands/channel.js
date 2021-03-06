@@ -32,7 +32,7 @@ const validateNewChannel = (newChannel) => {
   if (!newChannel) {
     result.error = true;
     result.message = 'text channel does not exist on server.';
-  } else if (newChannel.type !== 'text') {
+  } else if (newChannel.type !== 'text' || newChannel.type !== 'news') {
     result.error = true;
     result.message = 'the specified channel is not a text channel.';
   }
